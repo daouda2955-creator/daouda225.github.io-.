@@ -1,0 +1,17 @@
+html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes Jeux Android</title>
+</head>
+<body>
+    <h1>Bienvenue sur mon site de jeux</h1>
+    <p>Voici mes jeux créés avec Godot, à télécharger gratuitement pour Android.</p>
+
+    <h2>Mes jeux</h2>
+    <ul>
+        <li><a href="jeu1.apk">Télécharger Jeu 1</a></li>
+    </ul>
+</body>
+</html>
