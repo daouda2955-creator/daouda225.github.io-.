@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fff5f5">
-<title>Daouda Games 🎮</title>
+<title>Daouda Games</title>
 <style>
 :root {
-  --bg: #f8f9fc;
-  --panel: #ffffff;
-  --text: #1a1a1a;
-  --muted: #666666;
-  --primary: #e63946;
-  --primary-hover: #d90429;
-  --border: #eaeaea;
+  --bg: #0b0f19;
+  --card-bg: #131b2e;
+  --border: #1e293b;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --accent: #00d2ff;
+  --accent-hover: #00b4d8;
+  --badge-bg: #0284c7;
+  --red-heart: #ef4444;
 }
 
 * { box-sizing: border-box; }
@@ -21,228 +22,266 @@ body {
   margin: 0;
   background-color: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: 50px;
 }
 
 header {
-  padding: 20px 16px;
-  background: #ffffff;
+  padding: 16px 20px;
+  background: var(--card-bg);
   border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  align-items: center;
 }
 
 .brand {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 900;
-  color: var(--primary);
+  color: var(--accent);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
-main {
-  max-width: 700px;
+.container {
+  max-width: 800px;
   margin: auto;
-  padding: 20px 16px;
+  padding: 16px;
 }
 
-.search {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: #ffffff;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  margin-bottom: 16px;
-}
-
-h2 {
-  font-size: 18px;
-  margin: 24px 0 12px;
-  font-weight: 800;
-}
-
-.addbox {
-  background: var(--panel);
+/* Formulaire d'ajout discret et stylé */
+.add-box {
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-  margin-bottom: 24px;
+  padding: 18px;
+  margin-bottom: 20px;
 }
 
-.help {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-  margin-bottom: 14px;
+.add-box h3 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  color: var(--accent);
 }
 
-.form-group {
-  margin-bottom: 12px;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text);
+@media(max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
 }
 
-.form-control {
+.input-field {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: #fafafa;
+  background: #0b0f19;
+  color: white;
   font-size: 14px;
   outline: none;
 }
 
-.btn-red {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--primary);
+.input-field:focus {
+  border-color: var(--accent);
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
   color: white;
-  text-decoration: none;
-  padding: 16px;
-  border-radius: 14px;
-  font-weight: 800;
-  font-size: 16px;
-  border: 0;
-  cursor: pointer;
+  border: none;
   width: 100%;
-  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
-  transition: background 0.2s, transform 0.1s;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
 }
 
-.btn-red:hover { background: var(--primary-hover); }
-.btn-red:active { transform: scale(0.98); }
-
-.game-card-style {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-}
-
-.game-header {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.game-icon {
-  font-size: 40px;
-  background: #f1f2f6;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Barre de recherche */
+.search-bar {
+  width: 100%;
+  padding: 14px 16px;
   border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: white;
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 24px;
+}
+
+/* Grille des jeux style Dr las GAMES */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.game-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.game-img-container {
+  width: 100%;
+  height: 180px;
+  background: #1e293b;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.game-content {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.badges-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.platform-badge {
+  background: var(--badge-bg);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.size-badge {
+  background: #1e293b;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 .game-title {
-  font-size: 18px;
-  font-weight: 900;
-  margin-bottom: 4px;
-}
-
-.game-meta {
-  font-size: 13px;
-  color: var(--muted);
-  display: flex;
-  gap: 12px;
-}
-
-.remove-btn {
-  background: #ffe5e7;
-  color: var(--primary);
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  font-size: 15px;
   font-weight: 700;
-  font-size: 12px;
-  cursor: pointer;
-  margin-top: 10px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-footer {
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  padding: 30px;
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--red-heart);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.btn-view {
+  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+  color: white;
+  text-decoration: none;
+  padding: 6px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,210,255,0.3);
+}
+
+.btn-view:hover {
+  background: var(--accent-hover);
+}
+
+.delete-btn {
+  background: transparent;
+  color: #ef4444;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 8px;
+  text-align: left;
+  padding: 0;
 }
 
 .empty {
-  display: none;
-  color: var(--muted);
   text-align: center;
-  padding: 20px;
+  color: var(--muted);
+  grid-column: 1 / -1;
+  padding: 30px;
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">🔥 Daouda Games</div>
+  <div class="brand">🎮 Daouda Games</div>
 </header>
 
-<main>
-  <input id="search" class="search" type="search" placeholder="🔎 Rechercher un jeu..." aria-label="Rechercher">
+<div class="container">
 
-  <!-- FORMULAIRE POUR AJOUTER UN JEU MEDIAFIRE -->
-  <div class="addbox">
-    <h2>➕ Ajouter un jeu (Lien MediaFire)</h2>
-    <p class="help">Entre le nom du jeu, sa taille (ex: 4.9GB) et colle ton lien de téléchargement MediaFire direct.</p>
-    
-    <form id="mediafireForm">
-      <div class="form-group">
-        <label for="gameName">Nom du jeu</label>
-        <input id="gameName" class="form-control" type="text" placeholder="Ex: EFOOTBALL 2027 OFFLINE" required>
+  <!-- Formulaire pour ajouter tes jeux MediaFire facilement -->
+  <div class="add-box">
+    <h3>➕ Ajouter un nouveau jeu</h3>
+    <form id="gameForm">
+      <div class="form-grid">
+        <input type="text" id="nameInput" class="input-field" placeholder="Nom du jeu (ex: Sifu)" required>
+        <input type="text" id="platformInput" class="input-field" placeholder="Console (ex: Android / PS2)" required>
       </div>
-      <div class="form-group">
-        <label for="gameSize">Taille du fichier</label>
-        <input id="gameSize" class="form-control" type="text" placeholder="Ex: 4.9GB ou 850MB" required>
+      <div class="form-grid">
+        <input type="text" id="sizeInput" class="input-field" placeholder="Taille (ex: 1.3go)" required>
+        <input type="url" id="urlInput" class="input-field" placeholder="Lien MediaFire (https://mediafire.com/...)" required>
       </div>
-      <div class="form-group">
-        <label for="gameUrl">Lien MediaFire</label>
-        <input id="gameUrl" class="form-control" type="url" placeholder="https://www.mediafire.com/file/..." required>
-      </div>
-      <button class="btn-red" type="submit">🔒 Publier et obtenir les fichiers</button>
+      <input type="url" id="imgInput" class="input-field" placeholder="Lien de l'image de couverture (URL de l'image)" style="margin-bottom: 10px;" required>
+      <button type="submit" class="btn-add">Publier le jeu</button>
     </form>
   </div>
 
-  <h2>🎮 Jeux disponibles</h2>
-  <div id="gamesList"></div>
-  <div id="empty" class="empty">Aucun jeu trouvé.</div>
-</main>
+  <!-- Barre de recherche -->
+  <input type="search" id="searchInput" class="search-bar" placeholder="🔎 Rechercher un jeu (ex: GTA, Sifu, Zelda)...">
 
-<footer>Daouda Games · Hébergement et Partage MediaFire</footer>
+  <h2 style="font-size: 16px; margin-bottom: 16px; color: var(--muted);">🔥 Tous les Jeux</h2>
+
+  <!-- Grille des jeux -->
+  <div id="gamesGrid" class="games-grid"></div>
+
+</div>
 
 <script>
-const mediafireForm = document.getElementById('mediafireForm');
-const gamesList = document.getElementById('gamesList');
-const searchInput = document.getElementById('search');
-const emptyDiv = document.getElementById('empty');
+const gameForm = document.getElementById('gameForm');
+const gamesGrid = document.getElementById('gamesGrid');
+const searchInput = document.getElementById('searchInput');
 
-const STORAGE_KEY = 'daoudaMediafireGamesV1';
+const STORAGE_KEY = 'daouda_dark_games_v1';
 let games = [];
 
 try {
@@ -252,67 +291,91 @@ try {
   games = [];
 }
 
-// Jeux par défaut si la liste est vide (style l'image)
-if (games.length === 0) {
+// Exemple par défaut si la liste est vide (style de l'image)
+if(games.length === 0) {
   games.push({
-    name: 'EFOOTBALL 2027 OFFLINE',
-    size: '4.9GB',
-    url: 'https://www.mediafire.com'
+    name: 'Sifu',
+    platform: 'Android',
+    size: '1.3go',
+    url: 'https://www.mediafire.com',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400',
+    likes: 64
   });
 }
 
-function saveGames() {
+function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
-function renderGames() {
-  gamesList.innerHTML = '';
-  const query = searchInput.value.toLowerCase().trim();
+function render() {
+  gamesGrid.innerHTML = '';
+  const filter = searchInput.value.toLowerCase().trim();
   let count = 0;
 
   games.forEach((game, index) => {
-    if (query && !game.name.toLowerCase().includes(query)) return;
+    if(filter && !game.name.toLowerCase().includes(filter)) return;
     count++;
 
     const card = document.createElement('div');
-    card.className = 'game-card-style';
-
+    card.className = 'game-card';
     card.innerHTML = `
-      <div class="game-header">
-        <div class="game-icon">⚽</div>
-        <div>
-          <div class="game-title">${game.name}</div>
-          <div class="game-meta">
-            <span>⭐ 4.5 / 5</span>
-            <span>📥 ${game.size}</span>
-          </div>
-        </div>
+      <div class="game-img-container">
+        <img src="${game.image}" alt="${game.name}" onerror="this.src='https://images.unsplash.com/photo-1612287233002-91d015309e3e?w=400'">
       </div>
-      <a class="btn-red" href="${game.url}" target="_blank" rel="noopener noreferrer">
-        🔒 Obtenir les fichiers (${game.size})
-      </a>
-      <button class="remove-btn" onclick="deleteGame(${index})">🗑️ Supprimer</button>
+      <div class="game-content">
+        <div class="badges-row">
+          <span class="platform-badge">${game.platform}</span>
+          <span class="size-badge">${game.size}</span>
+        </div>
+        <div class="game-title" title="${game.name}">${game.name}</div>
+        <div class="card-footer">
+          <span class="likes">❤️ ${game.likes || 42}</span>
+          <a href="${game.url}" target="_blank" class="btn-view">Voir</a>
+        </div>
+        <button class="delete-btn" onclick="removeGame(${index})">🗑️ Supprimer</button>
+      </div>
     `;
-
-    gamesList.appendChild(card);
+    gamesGrid.appendChild(card);
   });
 
-  emptyDiv.style.display = count === 0 ? 'block' : 'none';
+  if(count === 0) {
+    gamesGrid.innerHTML = '<div class="empty">Aucun jeu trouvé.</div>';
+  }
 }
 
-window.deleteGame = function(index) {
-  if (confirm('Voulez-vous supprimer ce jeu ?')) {
+window.removeGame = function(index) {
+  if(confirm("Voulez-vous supprimer ce jeu ?")) {
     games.splice(index, 1);
-    saveGames();
-    renderGames();
+    save();
+    render();
   }
-};
+}
 
-mediafireForm.addEventListener('submit', (e) => {
+gameForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const name = document.getElementById('gameName').value.trim();
-  const size = document.getElementById('gameSize').value.trim();
-  const url = document.getElementById('gameUrl').value.trim();
+  const name = document.getElementById('nameInput').value.trim();
+  const platform = document.getElementById('platformInput').value.trim();
+  const size = document.getElementById('sizeInput').value.trim();
+  const url = document.getElementById('urlInput').value.trim();
+  const image = document.getElementById('imgInput').value.trim();
 
-  if (url.includes('
-  
+  games.unshift({
+    name,
+    platform,
+    size,
+    url,
+    image,
+    likes: Math.floor(Math.random() * 80) + 10
+  });
+
+  save();
+  render();
+  gameForm.reset();
+});
+
+searchInput.addEventListener('input', render);
+render();
+</script>
+
+</body>
+</html>
