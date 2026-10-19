@@ -1,17 +1,25 @@
-html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Jeux Android</title>
 </head>
 <body>
-    <h1>Bienvenue sur mon site de jeux</h1>
-    <p>Voici mes jeux créés avec Godot, à télécharger gratuitement pour Android.</p>
+    <header>
+        <h1>Bienvenue sur mon site de jeux</h1>
+        <p>Téléchargez mes jeux créés avec Godot ici.</p>
+    </header>
 
-    <h2>Mes jeux</h2>
-    <ul>
-        <li><a href="jeu1.apk">Télécharger Jeu 1</a></li>
-    </ul>
+    <main>
+        <section>
+            <h2>Mes Jeux</h2>
+            <ul>
+                <li>
+                    <a href="jeu1.apk" download>Télécharger Jeu 1</a>
+                </li>
+            </ul>
+        </section>
+    </main>
 </body>
 </html>
