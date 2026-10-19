@@ -50,8 +50,9 @@ header {
   padding: 16px;
 }
 
-/* Formulaire d'ajout discret et stylé */
+/* Le formulaire est caché par défaut pour les visiteurs */
 .add-box {
+  display: none;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -85,10 +86,14 @@ header {
   color: white;
   font-size: 14px;
   outline: none;
+  margin-bottom: 10px;
 }
 
-.input-field:focus {
-  border-color: var(--accent);
+.file-label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
 }
 
 .btn-add {
@@ -103,7 +108,6 @@ header {
   margin-top: 4px;
 }
 
-/* Barre de recherche */
 .search-bar {
   width: 100%;
   padding: 14px 16px;
@@ -116,7 +120,6 @@ header {
   margin-bottom: 24px;
 }
 
-/* Grille des jeux style Dr las GAMES */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -218,11 +221,9 @@ header {
   box-shadow: 0 2px 8px rgba(0,210,255,0.3);
 }
 
-.btn-view:hover {
-  background: var(--accent-hover);
-}
-
+/* Le bouton supprimer est caché pour les visiteurs normaux */
 .delete-btn {
+  display: none;
   background: transparent;
   color: #ef4444;
   border: none;
@@ -249,58 +250,58 @@ header {
 
 <div class="container">
 
-  <!-- Formulaire pour ajouter tes jeux MediaFire facilement -->
-  <div class="add-box">
-    <h3>➕ Ajouter un nouveau jeu</h3>
+  <!-- Formulaire administrateur (invisible pour les autres) -->
+  <div class="add-box" id="adminBox">
+    <h3>➕ Ajouter un nouveau jeu (Admin)</h3>
     <form id="gameForm">
       <div class="form-grid">
-        <input type="text" id="nameInput" class="input-field" placeholder="Nom du jeu (ex: Sifu)" required>
-        <input type="text" id="platformInput" class="input-field" placeholder="Console (ex: Android / PS2)" required>
+        <input type="text" id="nameInput" class="input-field" placeholder="Nom du jeu" required>
+        <input type="text" id="platformInput" class="input-field" placeholder="Console (ex: Android)" required>
       </div>
       <div class="form-grid">
         <input type="text" id="sizeInput" class="input-field" placeholder="Taille (ex: 1.3go)" required>
-        <input type="url" id="urlInput" class="input-field" placeholder="Lien MediaFire (https://mediafire.com/...)" required>
+        <input type="url" id="urlInput" class="input-field" placeholder="Lien MediaFire" required>
       </div>
-      <input type="url" id="imgInput" class="input-field" placeholder="Lien de l'image de couverture (URL de l'image)" style="margin-bottom: 10px;" required>
+      
+      <span class="file-label">Image (Optionnel) :</span>
+      <input type="file" id="fileImageInput" accept="image/*" class="input-field">
+
       <button type="submit" class="btn-add">Publier le jeu</button>
     </form>
   </div>
 
-  <!-- Barre de recherche -->
-  <input type="search" id="searchInput" class="search-bar" placeholder="🔎 Rechercher un jeu (ex: GTA, Sifu, Zelda)...">
+  <input type="search" id="searchInput" class="search-bar" placeholder="🔎 Rechercher un jeu...">
 
   <h2 style="font-size: 16px; margin-bottom: 16px; color: var(--muted);">🔥 Tous les Jeux</h2>
 
-  <!-- Grille des jeux -->
   <div id="gamesGrid" class="games-grid"></div>
 
 </div>
 
 <script>
+// VÉRIFICATION DE L'ADMINISTRATEUR (Toi seul avec ?admin=1)
+const urlParams = new URLSearchParams(window.location.search);
+const isAdmin = urlParams.get('admin') === '1';
+
+if (isAdmin) {
+  document.getElementById('adminBox').style.display = 'block';
+}
+
 const gameForm = document.getElementById('gameForm');
 const gamesGrid = document.getElementById('gamesGrid');
 const searchInput = document.getElementById('searchInput');
+const fileImageInput = document.getElementById('fileImageInput');
 
-const STORAGE_KEY = 'daouda_dark_games_v1';
-let games = [];
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400';
+const STORAGE_KEY = 'daouda_dark_games_v3';
 
-try {
-  games = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  if (!Array.isArray(games)) games = [];
-} catch(e) {
-  games = [];
-}
-
-// Exemple par défaut si la liste est vide (style de l'image)
-if(games.length === 0) {
-  games.push({
-    name: 'Sifu',
-    platform: 'Android',
-    size: '1.3go',
-    url: 'https://www.mediafire.com',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400',
-    likes: 64
-  });
+// Jeux de base si le site est vide
+let games = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+if (games.length === 0) {
+  games = [
+    { name: 'Sifu', platform: 'Android', size: '1.3go', url: 'https://www.mediafire.com', image: DEFAULT_IMAGE, likes: 64 }
+  ];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
 function save() {
@@ -316,11 +317,13 @@ function render() {
     if(filter && !game.name.toLowerCase().includes(filter)) return;
     count++;
 
+    const imgSrc = game.image || DEFAULT_IMAGE;
+
     const card = document.createElement('div');
     card.className = 'game-card';
     card.innerHTML = `
       <div class="game-img-container">
-        <img src="${game.image}" alt="${game.name}" onerror="this.src='https://images.unsplash.com/photo-1612287233002-91d015309e3e?w=400'">
+        <img src="${imgSrc}" alt="${game.name}" onerror="this.src='${DEFAULT_IMAGE}'">
       </div>
       <div class="game-content">
         <div class="badges-row">
@@ -329,17 +332,17 @@ function render() {
         </div>
         <div class="game-title" title="${game.name}">${game.name}</div>
         <div class="card-footer">
-          <span class="likes">❤️ ${game.likes || 42}</span>
-          <a href="${game.url}" target="_blank" class="btn-view">Voir</a>
+          <span class="likes">❤️ ${game.likes || 50}</span>
+          <a href="${game.url}" target="_blank" class="btn-view">Télécharger</a>
         </div>
-        <button class="delete-btn" onclick="removeGame(${index})">🗑️ Supprimer</button>
+        ${isAdmin ? `<button class="delete-btn" style="display:block;" onclick="removeGame(${index})">🗑️ Supprimer</button>` : ''}
       </div>
     `;
     gamesGrid.appendChild(card);
   });
 
   if(count === 0) {
-    gamesGrid.innerHTML = '<div class="empty">Aucun jeu trouvé.</div>';
+    gamesGrid.innerHTML = '<div class="empty">Aucun jeu disponible pour l\'instant.</div>';
   }
 }
 
@@ -349,29 +352,42 @@ window.removeGame = function(index) {
     save();
     render();
   }
-}
+};
 
-gameForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = document.getElementById('nameInput').value.trim();
-  const platform = document.getElementById('platformInput').value.trim();
-  const size = document.getElementById('sizeInput').value.trim();
-  const url = document.getElementById('urlInput').value.trim();
-  const image = document.getElementById('imgInput').value.trim();
+if (gameForm) {
+  gameForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('nameInput').value.trim();
+    const platform = document.getElementById('platformInput').value.trim();
+    const size = document.getElementById('sizeInput').value.trim();
+    const url = document.getElementById('urlInput').value.trim();
+    const file = fileImageInput.files[0];
 
-  games.unshift({
-    name,
-    platform,
-    size,
-    url,
-    image,
-    likes: Math.floor(Math.random() * 80) + 10
+    const createGameObj = (imageData) => {
+      games.unshift({
+        name,
+        platform,
+        size,
+        url,
+        image: imageData || DEFAULT_IMAGE,
+        likes: Math.floor(Math.random() * 80) + 10
+      });
+      save();
+      render();
+      gameForm.reset();
+    };
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        createGameObj(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      createGameObj(null);
+    }
   });
-
-  save();
-  render();
-  gameForm.reset();
-});
+}
 
 searchInput.addEventListener('input', render);
 render();
