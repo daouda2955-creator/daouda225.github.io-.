@@ -1,99 +1,592 @@
-<!DOCTYPE html><style>
-  body {
-    background-color: #0b0f19;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #00d2ff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-  }
-  header h1 {
-    color: #00d2ff;
-    margin: 0;
-  }
-  header button, section button, section a {
-    background-color: #00d2ff;
-    color: #0b0f19;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  section {
-    margin-bottom: 30px;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #1f293d;
-    background-color: #1f293d;
-    color: #ffffff;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  ul li {
-    background-color: #1f293d;
-    margin-bottom: 10px;
-    padding: 15px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-</style>
-
+<!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr las GAMES</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d111e">
+<title>Daouda Games 🎮 - Télécharge & Partage tes jeux</title>
+<style>
+:root {
+  --bg: #0d111e;
+  --panel: #161c30;
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --text: #f0f3ff;
+  --muted: #9aa5c4;
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --accent2: #06b6d4;
+  --accent2-glow: rgba(6, 182, 212, 0.35);
+  --card-bg: linear-gradient(145deg, #1a223c, #121729);
+  --btn-gradient: linear-gradient(135deg, #7c3aed, #06b6d4);
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.18) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.18) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+header {
+  padding: 35px 20px 25px;
+  background: rgba(19, 25, 45, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+  text-align: center;
+}
+
+.brand {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.tag {
+  color: var(--muted);
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+main {
+  max-width: 960px;
+  margin: auto;
+  padding: 24px 16px;
+}
+
+.search {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--panel-border);
+  background: rgba(13, 17, 30, 0.85);
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.search:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 4px var(--accent2-glow);
+}
+
+.categories {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 16px 0;
+  scrollbar-width: none;
+}
+.categories::-webkit-scrollbar { display: none; }
+
+.chip {
+  border: 1px solid var(--panel-border);
+  background: rgba(22, 28, 48, 0.6);
+  color: var(--muted);
+  padding: 10px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.chip:hover {
+  color: white;
+  background: rgba(255,255,255,0.08);
+}
+
+.chip.active {
+  background: var(--btn-gradient);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+h2 {
+  font-size: 22px;
+  margin: 32px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 16px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4), 0 0 15px var(--accent-glow);
+}
+
+.emoji {
+  font-size: 42px;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.name {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--btn-gradient);
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.btn:hover {
+  opacity: 0.95;
+  transform: scale(1.02);
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn2 {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+  margin-top: 8px;
+}
+.btn2:hover { background: rgba(255,255,255,0.15); }
+
+.remove {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: none;
+  margin-top: 8px;
+}
+.remove:hover { background: rgba(239, 68, 68, 0.3); }
+
+.addbox {
+  background: rgba(22, 28, 48, 0.5);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  padding: 22px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+.help {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0 14px;
+}
+
+.notice {
+  margin-top: 30px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid var(--accent2-glow);
+  color: #a5f3fc;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 30px;
+}
+
+.empty {
+  display: none;
+  color: var(--muted);
+  padding: 30px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.fileinfo {
+  font-size: 12px;
+  color: var(--accent2);
+  margin: 4px 0 10px;
+  font-weight: 600;
+}
+
+input[type=file] {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+}
+
+#customGameForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#customGameForm label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+select.search {
+  appearance: none;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Dr las GAMES</h1>
-        <button>Connexion</button>
-    </header>
 
-    <main>
-        <section>
-            <input type="text" placeholder="Rechercher un jeu...">
-        </section>
+<header>
+  <div class="brand">DAOUDA GAMES 🎮</div>
+  <div class="tag">La plateforme où tu peux télécharger, publier et partager tes jeux vidéo !</div>
+</header>
 
-        <section>
-            <button>Tous les jeux</button>
-            <button>Android</button>
-            <button>GameCube</button>
-        </section>
+<main>
+  <input id="search" class="search" type="search" placeholder="🔎 Rechercher un jeu, un fichier ou un hôtel..." aria-label="Rechercher">
+  
+  <div class="categories" id="categories">
+    <button class="chip active" data-cat="Tous">Tous</button>
+    <button class="chip" data-cat="Combat">🥊 Combat</button>
+    <button class="chip" data-cat="Course">🏎️ Course</button>
+    <button class="chip" data-cat="Football">⚽ Football</button>
+    <button class="chip" data-cat="Aventure">🗺️ Aventure</button>
+    <button class="chip" data-cat="Arcade">🕹️ Arcade</button>
+  </div>
 
-        <section>
-            <h2>Jeux Populaires</h2>
-            <!-- Ajoutez les cartes de jeux populaires ici -->
-        </section>
+  <!-- SECTION HÔTEL & ACCÈS RAPIDE -->
+  <h2>🏨 Mon Hôtel / Espace Privé</h2>
+  <section class="addbox" style="border: 2px solid var(--accent2-glow);">
+    <div style="font-weight:800; font-size: 18px; color: var(--accent2);">Accès direct à Mon Hôtel</div>
+    <p class="help">Retrouve ton espace personnalisé en un seul clic :</p>
+    <a class="btn" href="https://example.com" target="_blank" rel="noopener noreferrer" style="font-size: 16px; padding: 15px;">
+      🚀 Entrer dans Mon Hôtel
+    </a>
+  </section>
 
-        <section>
-            <h2>Tous les Jeux</h2>
-            <ul>
-                <li>
-                <a href="https://drive.google.com/file/d/1AGjNQtBTFA2CCrqeK01TMtRYmrzx8bnj/view?usp=drivesdk" download>télécharger</a>
-                  
+  <!-- FORMULAIRE D'AJOUT DE JEUX PAR LIEN -->
+  <h2>➕ Publier mon jeu (Lien de téléchargement)</h2>
+  <section class="addbox">
+    <p class="help">Ajoute un jeu pour que tout le monde puisse le voir et le télécharger directement[span_9](start_span)[span_9](end_span)!</p>
+    <form id="customGameForm">
+      <div>
+        <label for="customGameName">Nom du jeu</label>
+        <input id="customGameName" class="search" type="text" placeholder="Ex. : FIFA 25, GTA Mobile, Naruto..." required maxlength="100">
+      </div>
+      <div>
+        <label for="customGameCat">Catégorie</label>
+        <select id="customGameCat" class="search">
+          <option value="Arcade">🕹️ Arcade</option>
+          <option value="Combat">🥊 Combat</option>
+          <option value="Course">🏎️ Course</option>
+          <option value="Football">⚽ Football</option>
+          <option value="Aventure">🗺️ Aventure</option>
+        </select>
+      </div>
+      <div>
+        <label for="customGameUrl">Lien de téléchargement (Google Drive, Mediafire, etc.)</label>
+        <input id="customGameUrl" class="search" type="url" placeholder="https://..." required>
+      </div>
+      <button class="btn" type="submit">📥 Publier mon jeu</button>
+    </form>
+  </section>
 
+  <!-- FICHIERS DEPUIS TÉLÉPHONE -->
+  <h2>📁 Fichiers de jeux sur mon téléphone</h2>
+  <section class="addbox">
+    <p class="help">Sélectionne un fichier (.APK, .XAPK, .ZIP) de ton téléphone pour le référencer sur cette page[span_10](start_span)[span_10](end_span).</p>
+    <label class="btn btn2" for="filePicker">＋ Sélectionner des fichiers (.APK / .ZIP)</label>
+    <input id="filePicker" type="file" multiple accept=".apk,.xapk,.apks,.zip,application/vnd.android.package-archive,application/zip">
+    <div class="grid" id="myFiles" style="margin-top: 15px;"></div>
+    <div id="noFiles" class="help">Aucun fichier local sélectionné[span_11](start_span)[span_11](end_span).</div>
+  </section>
 
-                </li>
-                <!-- Ajoutez d'autres jeux ici -->
-            </ul>
-        </section>
-    </main>
+  <!-- JEUX AJOUTÉS ET PUBLIÉS -->
+  <h2>⭐ Jeux publiés par la communauté</h2>
+  <div class="grid" id="customGames"></div>
+
+  <!-- JEUX SUGGÉRÉS -->
+  <h2>🎮 Jeux populaires à découvrir</h2>
+  <div class="grid" id="games">
+    <article class="card" data-cat="Combat" data-name="Brawlhalla">
+      <div class="emoji">🥊</div><div class="name">Brawlhalla</div>
+      <div class="desc">Combats et affrontements multijoueurs dynamiques[span_12](start_span)[span_12](end_span).</div>
+      <a class="btn" href="https://play.google.com/store/search?q=Brawlhalla&c=apps" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+    <article class="card" data-cat="Course" data-name="Asphalt Legends">
+      <div class="emoji">🏎️</div><div class="name">Asphalt Legends</div>
+      <div class="desc">Courses automobiles et défis à toute vitesse[span_13](start_span)[span_13](end_span).</div>
+      <a class="btn" href="https://play.google.com/store/search?q=Asphalt%20Legends&c=apps" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+    <article class="card" data-cat="Football" data-name="eFootball">
+      <div class="emoji">⚽</div><div class="name">eFootball</div>
+      <div class="desc">Matchs de football réalistes et compétitions[span_14](start_span)[span_14](end_span).</div>
+      <a class="btn" href="https://play.google.com/store/search?q=eFootball&c=apps" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+    <article class="card" data-cat="Aventure" data-name="Genshin Impact">
+      <div class="emoji">🗺️</div><div class="name">Genshin Impact</div>
+      <div class="desc">Exploration et aventure fantastique en monde ouvert[span_15](start_span)[span_15](end_span).</div>
+      <a class="btn" href="https://genshin.hoyoverse.com/" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+    <article class="card" data-cat="Aventure" data-name="Roblox">
+      <div class="emoji">🌍</div><div class="name">Roblox</div>
+      <div class="desc">Explore des millions d'expériences créées par des joueurs[span_16](start_span)[span_16](end_span).</div>
+      <a class="btn" href="https://play.google.com/store/search?q=Roblox&c=apps" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+    <article class="card" data-cat="Arcade" data-name="Subway Surfers">
+      <div class="emoji">🛹</div><div class="name">Subway Surfers</div>
+      <div class="desc">Course d'arcade sans fin rapide et amusante[span_17](start_span)[span_17](end_span).</div>
+      <a class="btn" href="https://play.google.com/store/search?q=Subway%20Surfers&c=apps" target="_blank" rel="noopener">📥 Télécharger</a>
+    </article>
+  </div>
+
+  <div id="empty" class="empty">Aucun jeu trouvé pour cette recherche[span_18](start_span)[span_18](end_span).</div>
+
+  <div class="notice">
+    <strong>💡 Conseil de sécurité :</strong> Télécharge et installe uniquement des fichiers provenant de sources sûres[span_19](start_span)[span_19](end_span).
+  </div>
+</main>
+
+<footer>Daouda Games · Plateforme mise à jour[span_20](start_span)[span_20](end_span)</footer>
+
+<script>
+const search = document.getElementById('search');
+const cards = [...document.querySelectorAll('#games .card')];
+const chips = [...document.querySelectorAll('.chip')];
+const empty = document.getElementById('empty');
+const picker = document.getElementById('filePicker');
+const myFiles = document.getElementById('myFiles');
+const noFiles = document.getElementById('noFiles');
+let category = 'Tous';
+let chosenFiles = [];
+
+function filter() {
+  const q = search.value.trim().toLowerCase();
+  let count = 0;
+
+  cards.forEach(card => {
+    const okCat = category === 'Tous' || card.dataset.cat === category;
+    const okText = (card.dataset.name + ' ' + card.dataset.cat + ' ' + card.innerText).toLowerCase().includes(q);
+    const show = okCat && okText;
+    card.style.display = show ? 'flex' : 'none';
+    if (show) count++;
+  });
+
+  [...myFiles.children].forEach(card => {
+    const show = card.dataset.name.toLowerCase().includes(q);
+    card.style.display = show ? 'flex' : 'none';
+    if (show) count++;
+  });
+
+  [...document.querySelectorAll('#customGames .card')].forEach(card => {
+    const okCat = category === 'Tous' || card.dataset.cat === category;
+    const show = okCat && (card.dataset.name + ' ' + card.innerText).toLowerCase().includes(q);
+    card.style.display = show ? 'flex' : 'none';
+    if (show) count++;
+  });
+
+  empty.style.display = count ? 'none' : 'block';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' octets';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' Ko';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' Mo';
+}
+
+function renderFiles() {
+  myFiles.innerHTML = '';
+  chosenFiles.forEach((file, index) => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.dataset.name = file.name;
+
+    const emoji = document.createElement('div');
+    emoji.className = 'emoji';
+    emoji.textContent = file.name.toLowerCase().endsWith('.zip') ? '🗜️' : '📦';
+
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = file.name;
+
+    const info = document.createElement('div');
+    info.className = 'fileinfo';
+    info.textContent = formatSize(file.size);
+
+    const open = document.createElement('button');
+    open.className = 'btn btn2';
+    open.textContent = 'Afficher';
+    open.addEventListener('click', () => alert('Fichier local : ' + file.name));
+
+    const remove = document.createElement('button');
+    remove.className = 'btn remove';
+    remove.textContent = 'Retirer';
+    remove.addEventListener('click', () => {
+      chosenFiles.splice(index, 1);
+      renderFiles();
+      filter();
+    });
+
+    card.append(emoji, name, info, open, remove);
+    myFiles.append(card);
+  });
+  noFiles.style.display = chosenFiles.length ? 'none' : 'block';
+}
+
+picker.addEventListener('change', () => {
+  const incoming = [...picker.files];
+  incoming.forEach(file => {
+    if (!chosenFiles.some(existing => existing.name === file.name && existing.size === file.size)) {
+      chosenFiles.push(file);
+    }
+  });
+  renderFiles();
+  filter();
+  picker.value = '';
+});
+
+search.addEventListener('input', filter);
+
+chips.forEach(chip => chip.addEventListener('click', () => {
+  category = chip.dataset.cat;
+  chips.forEach(c => c.classList.toggle('active', c === chip));
+  filter();
+}));
+
+const customGameForm = document.getElementById('customGameForm');
+const customGames = document.getElementById('customGames');
+const CUSTOM_GAMES_KEY = 'daoudaGamesCustomLinksV5';
+let customGameEntries = [];
+
+try {
+  customGameEntries = JSON.parse(localStorage.getItem(CUSTOM_GAMES_KEY) || '[]');
+  if (!Array.isArray(customGameEntries)) customGameEntries = [];
+} catch (e) {
+  customGameEntries = [];
+}
+
+function renderCustomGames() {
+  customGames.innerHTML = '';
+  customGameEntries.forEach((game, index) => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.dataset.name = game.name;
+    card.dataset.cat = game.cat || 'Arcade';
+
+    const emoji = document.createElement('div');
+    emoji.className = 'emoji';
+    emoji.textContent = '🎮';
+
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = game.name;
+
+    const desc = document.createElement('div');
+    desc.className = 'desc';
+    desc.textContent = 'Catégorie : ' + (game.cat || 'Jeu');
+
+    const link = document.createElement('a');
+    link.className = 'btn';
+    link.href = game.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = '📥 Télécharger';
+
+    const remove = document.createElement('button');
+    remove.className = 'btn remove';
+    remove.textContent = 'Supprimer';
+    remove.addEventListener('click', () => {
+      customGameEntries.splice(index, 1);
+      saveCustomGames();
+      renderCustomGames();
+      filter();
+    });
+
+    card.append(emoji, name, desc, link, remove);
+    customGames.append(card);
+  });
+}
+
+function saveCustomGames() {
+  try {
+    localStorage.setItem(CUSTOM_GAMES_KEY, JSON.stringify(customGameEntries));
+  } catch (e) {
+    alert('Stockage local plein ou non supporté.');
+  }
+}
+
+customGameForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const gameName = document.getElementById('customGameName').value.trim();
+  const gameCat = document.getElementById('customGameCat').value;
+  const gameUrl = document.getElementById('customGameUrl').value.trim();
+
+  try {
+    const parsed = new URL(gameUrl);
+    if (!['https:', 'http:'].includes(parsed.protocol)) throw new Error('URL invalide');
+    
+    customGameEntries.unshift({ name: gameName, cat: gameCat, url: parsed.href });
+    saveCustomGames();
+    renderCustomGames();
+    customGameForm.reset();
+    filter();
+  } catch (e) {
+    alert('Veuillez entrer un lien valide (http:// ou https://)');
+  }
+});
+
+renderCustomGames();
+</script>
 </body>
 </html>
