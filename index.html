@@ -1,197 +1,112 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daouda Games</title>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mes Jeux - Admin</title>
   <style>
-    :root { --bg: #0b0f19; --card: #151c2c; --accent: #6366f1; --text: #fff; --sub: #94a3b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; }
-    header { background: #0f172a; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-    .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); }
-    .admin-btn { background: #1e293b; color: white; border: 1px solid var(--accent); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    .container { max-width: 1000px; margin: auto; padding: 15px; }
-    .search { width: 100%; padding: 12px; background: var(--card); border: 1px solid #1e293b; color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
-    .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
-    .cat-btn { background: var(--card); color: var(--sub); border: 1px solid #1e293b; padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: bold; }
-    .cat-btn.active { background: var(--accent); color: white; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-    .card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #1e293b; }
-    .card img { width: 100%; height: 180px; object-fit: cover; }
-    .card-body { padding: 10px; }
-    .title { font-size: 0.95rem; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--sub); margin-bottom: 10px; }
-    .badge { background: #1e1b4b; color: #818cf8; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-    .btn { display: block; text-align: center; background: var(--accent); color: white; text-decoration: none; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: var(--card); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid var(--accent); }
-    .modal-content input, .modal-content select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0f172a; border: 1px solid #1e293b; color: white; border-radius: 6px; }
-    .modal-content button { width: 100%; padding: 10px; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      margin: 0; padding: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1 {
+      color: #4a90e2;
+      text-align: center;
+    }
+    #loginSection, #addGameSection {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px 0;
+    }
+    input[type=text], input[type=password], input[type=url], input[type=date] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #357ABD;
+    }
+    .game {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+    .game img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 15px;
+      border: 1px solid #ddd;
+    }
+    .game-info {
+      flex-grow: 1;
+    }
+    .game-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .game-date {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 5px;
+    }
+    .game-link a {
+      color: #4a90e2;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .game-link a:hover {
+      text-decoration: underline;
+    }
+    #logoutBtn {
+      background: #e74c3c;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo">🎮 Daouda Games</div>
-    <button class="admin-btn" onclick="openAdmin()">+ Ajouter un Jeu</button>
-  </header>
+  <h1>Mes Jeux</h1>
 
-  <div class="container">
-    <input type="text" class="search" id="search" placeholder="Rechercher un jeu..." onkeyup="render()">
-    
-    <div class="categories">
-      <button class="cat-btn active" onclick="setCat('Tous', this)">Tous</button>
-      <button class="cat-btn" onclick="setCat('Android', this)">Android</button>
-      <button class="cat-btn" onclick="setCat('PSP', this)">PSP</button>
-      <button class="cat-btn" onclick="setCat('3DS', this)">3DS</button>
-      <button class="cat-btn" onclick="setCat('PS2', this)">PS2</button>
-    </div>
-
-    <div class="grid" id="grid">
-      <p style="color:var(--sub); text-align:center; grid-column:1/-1; padding:20px;">Chargement des jeux...</p>
-    </div>
+  <div id="loginSection">
+    <h2>Connexion Admin</h2>
+    <label for="passwordInput">Mot de passe :</label>
+    <input type="password" id="passwordInput" placeholder="Entrez le mot de passe" />
+    <button onclick="login()">Se connecter</button>
+    <p id="loginError" style="color:red; display:none;">Mot de passe incorrect</p>
   </div>
 
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <h3 style="margin-bottom:15px; color:white;">Ajouter un Jeu</h3>
-      <input type="text" id="t" placeholder="Nom du jeu">
-      <select id="p">
-        <option value="Android">Android</option>
-        <option value="PSP">PSP</option>
-        <option value="3DS">3DS</option>
-        <option value="PS2">PS2</option>
-      </select>
-      <input type="text" id="s" placeholder="Taille (ex: 1.3 Go)">
-      <input type="text" id="i" placeholder="Lien de l'image (URL photo)">
-      <input type="text" id="l" placeholder="Lien MediaFire">
-      <button id="btnSave" onclick="saveGame()">🚀 Publier pour tout le monde</button>
-      <button onclick="closeModal()" style="background:#475569; margin-top:8px;">Annuler</button>
-    </div>
-  </div>
-
-  <script>
-    // Connexion à la base de données publique
-    const firebaseConfig = {
-      databaseURL: "https://daoudagames-public-default-rtdb.firebaseio.com/"
-    };
-    
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
-    let gamesList = [];
-    let currentCat = 'Tous';
-
-    // Chargement et synchronisation en direct
-    db.ref('games').on('value', (snapshot) => {
-      const data = snapshot.val();
-      gamesList = [];
-      if (data) {
-        Object.keys(data).forEach(key => {
-          gamesList.push({ id: key, ...data[key] });
-        });
-        gamesList.reverse();
-      }
-      render();
-    });
-
-    function render() {
-      const q = document.getElementById('search').value.toLowerCase();
-      const grid = document.getElementById('grid');
-      
-      const filtered = gamesList.filter(g => {
-        const matchCat = (currentCat === 'Tous' || g.platform === currentCat);
-        const matchSearch = (g.title || '').toLowerCase().includes(q);
-        return matchCat && matchSearch;
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `<p style="color:var(--sub); text-align:center; grid-column:1/-1; padding:20px;">Aucun jeu disponible pour le moment.</p>`;
-        return;
-      }
-
-      grid.innerHTML = filtered.map(g => `
-        <div class="card">
-          <img src="${g.img || 'https://via.placeholder.com/160x180'}" alt="${g.title}">
-          <div class="card-body">
-            <div class="title">${g.title}</div>
-            <div class="meta">
-              <span class="badge">${g.platform}</span>
-              <span>${g.size}</span>
-            </div>
-            <a href="${g.link}" target="_blank" class="btn">📥 Télécharger</a>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function setCat(cat, btn) {
-      currentCat = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render();
-    }
-
-    function openAdmin() {
-      const pwd = prompt("Mot de passe Administrateur :");
-      if (pwd === "2026") {
-        document.getElementById('modal').style.display = 'flex';
-      } else if (pwd !== null) {
-        alert("Mot de passe incorrect !");
-      }
-    }
-
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
-    }
-
-    function saveGame() {
-      const title = document.getElementById('t').value;
-      const platform = document.getElementById('p').value;
-      const size = document.getElementById('s').value;
-      const img = document.getElementById('i').value;
-      const link = document.getElementById('l').value;
-      const btn = document.getElementById('btnSave');
-
-      if (!title || !link) {
-        alert("Remplis au moins le nom du jeu et le lien MediaFire !");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerText = "Publication en cours...";
-
-      // Envoi sécurisé des données
-      const newGameRef = db.ref('games').push();
-      newGameRef.set({
-        title: title,
-        platform: platform,
-        size: size,
-        img: img,
-        link: link,
-        timestamp: Date.now()
-      }, (error) => {
-        btn.disabled = false;
-        btn.innerText = "🚀 Publier pour tout le monde";
-        
-        if (error) {
-          alert("Erreur : " + error.message);
-        } else {
-          alert("✅ Jeu publié avec succès ! Il est maintenant visible partout.");
-          closeModal();
-          document.getElementById('t').value = '';
-          document.getElementById('s').value = '';
-          document.getElementById('i').value = '';
-          document.getElementById('l').value = '';
-        }
-      });
-    }
-  </script>
-</body>
-</html>
+  <div id="addGameSection" style="display:none;">
+    <h2>Ajouter un jeu</h2>
+    <label for="gameTitle">Titre du jeu :</label>
+    <input type="text" id="gameTitle" placeholder="Nom du jeu" />
+    <label for="gameImage">URL de l'image :</label>
+    <input type="url" id="gameImage" placeholder="https://exemple.com/image.jpg" />
+    <label for="gameDate">Date d'ajout :</label>
