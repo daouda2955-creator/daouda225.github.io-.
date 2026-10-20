@@ -8,7 +8,8 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f4f6f8;
-      margin: 0; padding: 20px;
+      margin: 0;
+      padding: 20px;
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
@@ -22,91 +23,154 @@
       padding: 20px;
       margin-bottom: 30px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-radius: 8px;
+      border-radius: 5px;
     }
-    label {
-      display: block;
-      margin: 10px 0 5px 0;
-    }
-    input[type=text], input[type=password], input[type=url], input[type=date] {
-      width: 100%;
+    input, button {
+      font-size: 1rem;
       padding: 8px;
+      margin-top: 8px;
+      display: block;
+      width: 100%;
+      max-width: 300px;
       box-sizing: border-box;
     }
-    button {
-      margin-top: 15px;
-      background-color: #4a90e2;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
+    #gamesList {
+      list-style: none;
+      padding: 0;
     }
-    button:hover {
-      background-color: #357ABD;
-    }
-    .game {
+    #gamesList li {
       background: white;
-      border-radius: 8px;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 5px;
       box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
       display: flex;
+      gap: 15px;
       align-items: center;
-      padding: 10px;
     }
-    .game img {
-      width: 120px;
-      height: 80px;
+    #gamesList img {
+      width: 100px;
+      height: 60px;
       object-fit: cover;
-      border-radius: 6px;
-      margin-right: 15px;
-      border: 1px solid #ddd;
+      border-radius: 5px;
     }
-    .game-info {
+    .gameInfo {
       flex-grow: 1;
     }
-    .game-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 5px;
-      color: #333;
+    .gameInfo h3 {
+      margin: 0 0 5px 0;
     }
-    .game-date {
-      font-size: 14px;
-      color: #777;
-      margin-bottom: 5px;
+    .gameInfo small {
+      color: #666;
     }
-    .game-link a {
-      color: #4a90e2;
+    .downloadLink {
+      background: #4a90e2;
+      color: white;
+      padding: 8px 12px;
       text-decoration: none;
+      border-radius: 3px;
       font-weight: bold;
-    }
-    .game-link a:hover {
-      text-decoration: underline;
-    }
-    #logoutBtn {
-      background: #e74c3c;
-      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <h1>Mes Jeux - Administration</h1>
 
-  <h1>Mes Jeux</h1>
+  <section id="loginSection">
+    <label for="password">Entrer le mot de passe admin :</label>
+    <input type="password" id="password" autocomplete="off" />
+    <button id="loginBtn">Se connecter</button>
+    <p id="loginError" style="color: red; display: none;">Mot de passe incorrect.</p>
+  </section>
 
-  <div id="loginSection">
-    <h2>Connexion Admin</h2>
-    <label for="passwordInput">Mot de passe :</label>
-    <input type="password" id="passwordInput" placeholder="Entrez le mot de passe" />
-    <button onclick="login()">Se connecter</button>
-    <p id="loginError" style="color:red; display:none;">Mot de passe incorrect</p>
-  </div>
-
-  <div id="addGameSection" style="display:none;">
+  <section id="addGameSection" style="display:none;">
     <h2>Ajouter un jeu</h2>
     <label for="gameTitle">Titre du jeu :</label>
-    <input type="text" id="gameTitle" placeholder="Nom du jeu" />
+    <input type="text" id="gameTitle" placeholder="Titre" />
     <label for="gameImage">URL de l'image :</label>
-    <input type="url" id="gameImage" placeholder="https://exemple.com/image.jpg" />
+    <input type="text" id="gameImage" placeholder="https://exemple.com/image.jpg" />
     <label for="gameDate">Date d'ajout :</label>
+    <input type="date" id="gameDate" />
+    <label for="gameLink">Lien de téléchargement :</label>
+    <input type="text" id="gameLink" placeholder="https://exemple.com/jeu.zip" />
+    <button id="addGameBtn">Ajouter le jeu</button>
+  </section>
+
+  <section>
+    <h2>Liste des jeux</h2>
+    <ul id="gamesList"></ul>
+  </section>
+
+  <script>
+    const PASSWORD = "admin123";
+
+    const loginSection = document.getElementById('loginSection');
+    const addGameSection = document.getElementById('addGameSection');
+    const loginBtn = document.getElementById('loginBtn');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('loginError');
+
+    loginBtn.addEventListener('click', () => {
+      if (passwordInput.value === PASSWORD) {
+        loginSection.style.display = 'none';
+        addGameSection.style.display = 'block';
+        loginError.style.display = 'none';
+      } else {
+        loginError.style.display = 'block';
+      }
+      passwordInput.value = '';
+    });
+
+    const addGameBtn = document.getElementById('addGameBtn');
+    const gamesList = document.getElementById('gamesList');
+
+    addGameBtn.addEventListener('click', () => {
+      const title = document.getElementById('gameTitle').value.trim();
+      const image = document.getElementById('gameImage').value.trim();
+      const date = document.getElementById('gameDate').value;
+      const link = document.getElementById('gameLink').value.trim();
+
+      if (!title || !image || !date || !link) {
+        alert('Merci de remplir tous les champs.');
+        return;
+      }
+
+      const li = document.createElement('li');
+      const img = document.createElement('img');
+      img.src = image;
+      img.alt = title;
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = "gameInfo";
+
+      const h3 = document.createElement('h3');
+      h3.textContent = title;
+
+      const small = document.createElement('small');
+      small.textContent = `Ajouté le : ${date}`;
+
+      infoDiv.appendChild(h3);
+      infoDiv.appendChild(small);
+
+      const a = document.createElement('a');
+      a.href = link;
+      a.textContent = "Télécharger";
+      a.className = "downloadLink";
+      a.target = "_blank";
+      a.rel = "noopener";
+
+      li.appendChild(img);
+      li.appendChild(infoDiv);
+      li.appendChild(a);
+
+      gamesList.appendChild(li);
+
+      // Réinitialiser le formulaire
+      document.getElementById('gameTitle').value = '';
+      document.getElementById('gameImage').value = '';
+      document.getElementById('gameDate').value = '';
+      document.getElementById('gameLink').value = '';
+    });
+  </script>
+</body>
+</html>
