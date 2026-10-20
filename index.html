@@ -1,258 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Daouda Games</title>
-<style>
-:root {
-  --bg: #0b0f19;
-  --card-bg: #131b2e;
-  --border: #1e293b;
-  --text: #ffffff;
-  --muted: #94a3b8;
-  --accent: #00d2ff;
-  --accent-hover: #00b4d8;
-  --badge-bg: #0284c7;
-  --red-heart: #ef4444;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daouda Games</title>
+  <!-- SDKs Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  padding-bottom: 50px;
-}
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151c2c;
+      --accent: #6366f1;
+      --accent-pink: #ec4899;
+      --text: #ffffff;
+      --text-sub: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text); padding-bottom: 50px; }
+    
+    header { background: #0f172a; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .admin-btn { background: #1e293b; color: white; border: 1px solid var(--accent); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    
+    .container { max-width: 1000px; margin: auto; padding: 15px; }
+    
+    /* Recherche & Catégories */
+    .search-box { width: 100%; padding: 12px 15px; background: var(--card-bg); border: 1px solid #1e293b; color: white; border-radius: 10px; margin-bottom: 15px; font-size: 1rem; outline: none; }
+    .search-box:focus { border-color: var(--accent); }
+    
+    .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+    .cat-btn { background: var(--card-bg); color: var(--text-sub); border: 1px solid #1e293b; padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: 600; }
+    .cat-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-pink)); color: white; border: none; }
 
-header {
-  padding: 16px 20px;
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 16px;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--card-bg);
-  color: white;
-  font-size: 15px;
-  outline: none;
-  margin-bottom: 24px;
-}
-
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.game-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.game-img-container {
-  width: 100%;
-  height: 180px;
-  background: #1e293b;
-  position: relative;
-  overflow: hidden;
-}
-
-.game-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.game-content {
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.badges-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.platform-badge {
-  background: var(--badge-bg);
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-  text-transform: uppercase;
-}
-
-.size-badge {
-  background: #1e293b;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-.game-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
-
-.likes {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--red-heart);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.btn-view {
-  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-  color: white;
-  text-decoration: none;
-  padding: 6px 18px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 13px;
-  box-shadow: 0 2px 8px rgba(0,210,255,0.3);
-}
-
-.empty {
-  text-align: center;
-  color: var(--muted);
-  grid-column: 1 / -1;
-  padding: 30px;
-}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="brand">🎮 Daouda Games</div>
-</header>
-
-<div class="container">
-
-  <input type="search" id="searchInput" class="search-bar" placeholder="🔎 Rechercher un jeu...">
-
-  <h2 style="font-size: 16px; margin-bottom: 16px; color: var(--muted);">🔥 Tous les Jeux</h2>
-
-  <div id="gamesGrid" class="games-grid"></div>
-
-</div>
-
-<script>
-// ==========================================
-// AJOUTE TES JEUX ICI DIRECTEMENT !
-// ==========================================
-const games = [
-  {
-    name: "Sifu",
-    platform: "Android",
-    size: "1.3go",
-    url: "https://www.mediafire.com/file/TON_LIEN_ICI",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400",
-    likes: 64
-  },
-  {
-    name: "GTA V Portable",
-    platform: "Android",
-    size: "4.5go",
-    url: "https://www.mediafire.com/file/TON_DEUXIEME_LIEN",
-    image: "https://images.unsplash.com/photo-1612287233002-91d015309e3e?w=400",
-    likes: 120
-  }
-  // Pour ajouter un autre jeu, rajoute-le ici en respectant le même format !
-];
-
-const gamesGrid = document.getElementById('gamesGrid');
-const searchInput = document.getElementById('searchInput');
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400';
-
-function render() {
-  gamesGrid.innerHTML = '';
-  const filter = searchInput.value.toLowerCase().trim();
-  let count = 0;
-
-  games.forEach((game) => {
-    if(filter && !game.name.toLowerCase().includes(filter)) return;
-    count++;
-
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    card.innerHTML = `
-      <div class="game-img-container">
-        <img src="${game.image}" alt="${game.name}" onerror="this.src='${DEFAULT_IMAGE}'">
-      </div>
-      <div class="game-content">
-        <div class="badges-row">
-          <span class="platform-badge">${game.platform}</span>
-          <span class="size-badge">${game.size}</span>
-        </div>
-        <div class="game-title" title="${game.name}">${game.name}</div>
-        <div class="card-footer">
-          <span class="likes">❤️ ${game.likes}</span>
-          <a href="${game.url}" target="_blank" class="btn-view">Télécharger</a>
-        </div>
-      </div>
-    `;
-    gamesGrid.appendChild(card);
-  });
-
-  if(count === 0) {
-    gamesGrid.innerHTML = '<div class="empty">Aucun jeu trouvé.</div>';
-  }
-}
-
-searchInput.addEventListener('input', render);
-render();
-</script>
-
-</body>
-</html>
+    /* Grille de jeux */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+    .game-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid #1e293b; transition: transform 0.2s; }
+    .game-card:hover { transform: translateY(-3px); }
+    .game-img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .game-info { padding: 12px; }
+    .game-title { font-size:
+      
