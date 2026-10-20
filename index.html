@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daouda Games</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     :root { --bg: #0b0f19; --card: #151c2c; --accent: #6366f1; --text: #fff; --sub: #94a3b8; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -49,7 +52,7 @@
     </div>
 
     <div class="grid" id="grid">
-      <p style="color:var(--sub); text-align:center; grid-column:1/-1; padding:20px;">Chargement du catalogue en ligne...</p>
+      <p style="color:var(--sub); text-align:center; grid-column:1/-1; padding:20px;">Chargement des jeux...</p>
     </div>
   </div>
 
@@ -72,31 +75,31 @@
   </div>
 
   <script>
-    const BIN_ID = '6715f012ad19ca34f8bd3e21'; 
-    const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+    // Connexion à la base de données publique
+    const firebaseConfig = {
+      databaseURL: "https://daoudagames-public-default-rtdb.firebaseio.com/"
+    };
+    
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
 
     let gamesList = [];
     let currentCat = 'Tous';
 
-    // Charger les jeux sauvegardés en ligne
-    async function loadGames() {
-      try {
-        const res = await fetch(`${API_URL}/latest`, {
-          headers: { 'X-Bin-Meta': 'false' }
+    // Chargement et synchronisation en direct
+    db.ref('games').on('value', (snapshot) => {
+      const data = snapshot.val();
+      gamesList = [];
+      if (data) {
+        Object.keys(data).forEach(key => {
+          gamesList.push({ id: key, ...data[key] });
         });
-        if (res.ok) {
-          gamesList = await res.json();
-          render();
-        } else {
-          gamesList = [];
-          render();
-        }
-      } catch (e) {
-        console.error(e);
-        gamesList = [];
-        render();
+        gamesList.reverse();
       }
-    }
+      render();
+    });
 
     function render() {
       const q = document.getElementById('search').value.toLowerCase();
@@ -104,7 +107,7 @@
       
       const filtered = gamesList.filter(g => {
         const matchCat = (currentCat === 'Tous' || g.platform === currentCat);
-        const matchSearch = g.title.toLowerCase().includes(q);
+        const matchSearch = (g.title || '').toLowerCase().includes(q);
         return matchCat && matchSearch;
       });
 
@@ -148,7 +151,7 @@
       document.getElementById('modal').style.display = 'none';
     }
 
-    async function saveGame() {
+    function saveGame() {
       const title = document.getElementById('t').value;
       const platform = document.getElementById('p').value;
       const size = document.getElementById('s').value;
@@ -156,44 +159,39 @@
       const link = document.getElementById('l').value;
       const btn = document.getElementById('btnSave');
 
-      if (!title || !link) return alert("Remplis au moins le nom du jeu et le lien MediaFire !");
+      if (!title || !link) {
+        alert("Remplis au moins le nom du jeu et le lien MediaFire !");
+        return;
+      }
 
       btn.disabled = true;
       btn.innerText = "Publication en cours...";
 
-      const newGame = { title, platform, size, img, link, id: Date.now() };
-      gamesList.unshift(newGame);
-
-      try {
-        const res = await fetch(API_URL, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(gamesList)
-        });
-
-        if (res.ok) {
-          alert("✅ Jeu publié avec succès sur Internet !");
+      // Envoi sécurisé des données
+      const newGameRef = db.ref('games').push();
+      newGameRef.set({
+        title: title,
+        platform: platform,
+        size: size,
+        img: img,
+        link: link,
+        timestamp: Date.now()
+      }, (error) => {
+        btn.disabled = false;
+        btn.innerText = "🚀 Publier pour tout le monde";
+        
+        if (error) {
+          alert("Erreur : " + error.message);
+        } else {
+          alert("✅ Jeu publié avec succès ! Il est maintenant visible partout.");
           closeModal();
           document.getElementById('t').value = '';
           document.getElementById('s').value = '';
           document.getElementById('i').value = '';
           document.getElementById('l').value = '';
-          render();
-        } else {
-          alert("Erreur lors de la sauvegarde en ligne. Réessaye.");
         }
-      } catch (e) {
-        alert("Erreur de connexion : " + e.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "🚀 Publier pour tout le monde";
-      }
+      });
     }
-
-    // Charger les jeux au démarrage
-    loadGames();
   </script>
 </body>
 </html>
