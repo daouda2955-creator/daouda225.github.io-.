@@ -44,13 +44,23 @@ header {
   gap: 8px;
 }
 
+.btn-admin-login {
+  background: #1e293b;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .container {
   max-width: 800px;
   margin: auto;
   padding: 16px;
 }
 
-/* Le formulaire est caché par défaut pour les visiteurs */
+/* Le formulaire est caché jusqu'à la connexion */
 .add-box {
   display: none;
   background: var(--card-bg);
@@ -221,7 +231,6 @@ header {
   box-shadow: 0 2px 8px rgba(0,210,255,0.3);
 }
 
-/* Le bouton supprimer est caché pour les visiteurs normaux */
 .delete-btn {
   display: none;
   background: transparent;
@@ -246,13 +255,14 @@ header {
 
 <header>
   <div class="brand">🎮 Daouda Games</div>
+  <button class="btn-admin-login" onclick="toggleAdmin()">⚙️ Admin</button>
 </header>
 
 <div class="container">
 
-  <!-- Formulaire administrateur (invisible pour les autres) -->
+  <!-- Formulaire d'ajout Administrateur -->
   <div class="add-box" id="adminBox">
-    <h3>➕ Ajouter un nouveau jeu (Admin)</h3>
+    <h3>➕ Ajouter un nouveau jeu (Espace Admin)</h3>
     <form id="gameForm">
       <div class="form-grid">
         <input type="text" id="nameInput" class="input-field" placeholder="Nom du jeu" required>
@@ -279,12 +289,26 @@ header {
 </div>
 
 <script>
-// VÉRIFICATION DE L'ADMINISTRATEUR (Toi seul avec ?admin=1)
-const urlParams = new URLSearchParams(window.location.search);
-const isAdmin = urlParams.get('admin') === '1';
+let isAdmin = false;
+const PASS_ADMIN = "1234"; // TON MOT DE PASSE SECRET
 
-if (isAdmin) {
-  document.getElementById('adminBox').style.display = 'block';
+function toggleAdmin() {
+  if (!isAdmin) {
+    const pass = prompt("Entrez le mot de passe administrateur :");
+    if (pass === PASS_ADMIN) {
+      isAdmin = true;
+      document.getElementById('adminBox').style.display = 'block';
+      alert("Mode Admin activé ! Tu peux maintenant ajouter et supprimer des jeux.");
+      render();
+    } else if (pass !== null) {
+      alert("Mot de passe incorrect.");
+    }
+  } else {
+    isAdmin = false;
+    document.getElementById('adminBox').style.display = 'none';
+    alert("Mode Admin désactivé.");
+    render();
+  }
 }
 
 const gameForm = document.getElementById('gameForm');
@@ -293,16 +317,9 @@ const searchInput = document.getElementById('searchInput');
 const fileImageInput = document.getElementById('fileImageInput');
 
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400';
-const STORAGE_KEY = 'daouda_dark_games_v3';
+const STORAGE_KEY = 'daouda_dark_games_v4';
 
-// Jeux de base si le site est vide
 let games = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-if (games.length === 0) {
-  games = [
-    { name: 'Sifu', platform: 'Android', size: '1.3go', url: 'https://www.mediafire.com', image: DEFAULT_IMAGE, likes: 64 }
-  ];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
-}
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
@@ -394,4 +411,4 @@ render();
 </script>
 
 </body>
-</html>?admin=1
+</html>
